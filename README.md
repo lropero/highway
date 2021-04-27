@@ -17,15 +17,6 @@ Times and sales.
 $ npm ci
 ```
 
-### Configuration
-
-- Create `.env` file with your Binance reading-only keys (_required for data retrieval_):
-
-```sh
-APIKEY=<YOUR_API_KEY>
-APISECRET=<YOUR_API_SECRET>
-```
-
 ### Usage
 
 ```sh

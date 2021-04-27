@@ -1,18 +1,12 @@
 const Binance = require('node-binance-api')
 const chalk = require('chalk')
-const dotenv = require('dotenv')
 const { cross, line } = require('figures')
 const { format } = require('date-fns')
 const { program } = require('commander')
 
 const { version } = require('./package.json')
 
-dotenv.config()
-
-const binance = new Binance().options({
-  APIKEY: process.env.APIKEY,
-  APISECRET: process.env.APISECRET
-})
+const binance = new Binance()
 const isWindows = process.platform === 'win32'
 
 const log = message => {
@@ -27,7 +21,7 @@ const run = async options => {
       // const { e: eventType, E: eventTime, s: symbol, t: tradeId, p: price, q: quantity, b: buyerOrderId, a: sellerOrderId, T: tradeTime, m: marketMaker } = trade
       const { p: price, q: quantity, m: marketMaker } = trade
       if (quantity >= options.filter) {
-        log(chalk[marketMaker ? 'red' : 'green'](`${price} ${options.block > 0 && quantity >= options.block ? chalk.bgWhite(parseFloat(quantity)) : parseFloat(quantity)}`))
+        log(`${chalk[marketMaker ? 'red' : 'green'](price)} ${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgRed' : 'bgGreen'](parseFloat(quantity)) : chalk[marketMaker ? 'red' : 'green'](parseFloat(quantity))}`)
       }
     })
   } catch (error) {
