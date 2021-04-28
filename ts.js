@@ -17,11 +17,20 @@ const run = async options => {
   try {
     console.log(`${chalk.green(`Times & Sales v${version}`)} ${chalk[isWindows ? 'white' : 'gray'](`${line} run with -h to output usage information`)}`)
     console.log(chalk.yellow(`Like it? Buy me a ${isWindows ? 'beer' : '🍺'} :) 1B7owVfYhLjWLh9NWivQAKJHBcf8Doq54i (BTC)`))
+    let level, previousPrice
     binance.websockets.trades(options.pair, trade => {
       // const { e: eventType, E: eventTime, s: symbol, t: tradeId, p: price, q: quantity, b: buyerOrderId, a: sellerOrderId, T: tradeTime, m: marketMaker } = trade
       const { p: price, q: quantity, m: marketMaker } = trade
       if (quantity >= options.filter) {
-        log(`${chalk[marketMaker ? 'red' : 'green'](price)} ${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgRed' : 'bgGreen'](parseFloat(quantity)) : chalk[marketMaker ? 'red' : 'green'](parseFloat(quantity))}`)
+        if (!previousPrice) {
+          level = 0
+        } else if (price < previousPrice && level > -30) {
+          level--
+        } else if (price > previousPrice && level < 30) {
+          level++
+        }
+        previousPrice = price
+        log(`${chalk[marketMaker ? 'red' : 'green'](price)} ${chalk[level > 0 ? 'green' : 'red']('\u2588'.repeat(Math.abs(level)))}${chalk[isWindows ? 'blue' : 'gray']('\u2591'.repeat(30 - Math.abs(level)))} ${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgRed' : 'bgGreen'](parseFloat(quantity)) : chalk[marketMaker ? 'red' : 'green'](parseFloat(quantity))}`)
       }
     })
   } catch (error) {

@@ -20,7 +20,7 @@ $ npm ci
 ### Usage
 
 ```sh
-$ npm run start # will run 'node ts.js -p BTCUSDT'
+$ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT'
 ```
 
 ### Options
