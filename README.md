@@ -20,25 +20,25 @@ $ npm ci
 ### Usage
 
 ```sh
-$ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT'
+$ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT -t'
 ```
 
 ### Options
-
-##### `-h` / `--help`
-
-Display help
-
-```sh
-node ts.js -h
-```
 
 ##### `-b` / `--block <size>`
 
 Block alert size (default 0)
 
 ```sh
-node ts.js -b 50
+node ts.js -b 1
+```
+
+##### `-c` / `--cap <size>`
+
+Filter more than quantity (default 0)
+
+```sh
+node ts.js -c 0.2
 ```
 
 ##### `-f` / `--filter <size>`
@@ -46,13 +46,29 @@ node ts.js -b 50
 Filter less than size (default 0)
 
 ```sh
-node ts.js -f 10
+node ts.js -f 0.2
 ```
 
 ##### `-p` / `--pair <pair>`
 
-Pair (default BTCUSDT)
+Pair (required)
 
 ```sh
-node ts.js -p ETHUSDT
+node ts.js -p BTCUSDT
+```
+
+##### `-t` / `--time`
+
+Show time (default false)
+
+```sh
+node ts.js -t
+```
+
+##### `-h` / `--help`
+
+Display help
+
+```sh
+node ts.js -h
 ```

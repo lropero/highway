@@ -21,7 +21,7 @@ const run = async options => {
     binance.websockets.trades(options.pair, trade => {
       // const { e: eventType, E: eventTime, s: symbol, t: tradeId, p: price, q: quantity, b: buyerOrderId, a: sellerOrderId, T: tradeTime, m: marketMaker } = trade
       const { p: price, q: quantity, m: marketMaker } = trade
-      if (quantity >= options.filter) {
+      if (quantity >= options.filter && (options.cap === 0 || quantity < options.cap)) {
         if (!previousPrice) {
           level = 0
         } else if (price < previousPrice && level > -30) {
@@ -30,7 +30,8 @@ const run = async options => {
           level++
         }
         previousPrice = price
-        log(`${chalk[marketMaker ? 'red' : 'green'](price)} ${chalk[level > 0 ? 'green' : 'red']('\u2588'.repeat(Math.abs(level)))}${chalk[isWindows ? 'blue' : 'gray']('\u2591'.repeat(30 - Math.abs(level)))} ${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgRed' : 'bgGreen'](parseFloat(quantity)) : chalk[marketMaker ? 'red' : 'green'](parseFloat(quantity))}`)
+        const message = `${chalk[marketMaker ? 'red' : 'green'](price)} ${chalk[level > 0 ? 'green' : 'red']('\u2588'.repeat(Math.abs(level)))}${chalk[marketMaker ? 'red' : 'green']('\u2591'.repeat(30 - Math.abs(level)))} ${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgRed' : 'bgGreen'](parseFloat(quantity)) : chalk[marketMaker ? 'red' : 'green'](parseFloat(quantity))}`
+        options.time ? log(message) : console.log(message)
       }
     })
   } catch (error) {
@@ -40,15 +41,19 @@ const run = async options => {
 }
 
 program
-  .option('-b, --block <size>', 'block alert size (default 0)')
-  .option('-f, --filter <size>', 'filter less than size (default 0)')
-  .option('-p, --pair <pair>', 'pair (default BTCUSDT)')
+  .option('-b, --block <size>', 'block alert quantity (default 0)')
+  .option('-c, --cap <size>', 'filter more than quantity (default 0)')
+  .option('-f, --filter <size>', 'filter less than quantity (default 0)')
+  .requiredOption('-p, --pair <pair>', 'pair (required)')
+  .option('-t, --time', 'show time (default false)')
   .parse(process.argv)
 
 const options = program.opts()
 
 run({
   block: options.block ? parseFloat(options.block) : 0,
+  cap: options.cap ? parseFloat(options.cap) : 0,
   filter: options.filter ? parseFloat(options.filter) : 0,
-  pair: options.pair ?? 'BTCUSDT'
+  pair: options.pair ?? 'BTCUSDT',
+  time: !!options.time
 })
