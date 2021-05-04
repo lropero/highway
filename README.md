@@ -27,7 +27,7 @@ $ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT -t'
 
 ##### `-b` / `--block <size>`
 
-Block alert size (default 0)
+Block alert quantity (default 0)
 
 ```sh
 node ts.js -b 1
@@ -43,7 +43,7 @@ node ts.js -c 0.2
 
 ##### `-f` / `--filter <size>`
 
-Filter less than size (default 0)
+Filter less than quantity (default 0)
 
 ```sh
 node ts.js -f 0.2
