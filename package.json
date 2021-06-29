@@ -1,17 +1,17 @@
 {
   "name": "ts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Times and sales.",
   "scripts": {
     "clean": "npx rimraf npm-*.log && npx rimraf package-lock.json && npx -p rimraf rimraf node_modules && npm cache verify",
     "lint": "npx prettier-standard --lint",
     "nuke": "npm run clean && npm install",
-    "start": "node ts.js -b 1 -f 0.2 -p BTCUSDT -t",
+    "start": "node ts.js -b 1 -p BTCUSDT -t",
     "upgrade": "npx upgradeps -n"
   },
   "dependencies": {
     "chalk": "^4.1.1",
-    "commander": "^7.2.0",
+    "commander": "^8.0.0",
     "figures": "^3.2.0",
     "node-binance-api": "^0.12.5"
   },

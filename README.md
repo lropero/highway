@@ -4,8 +4,8 @@ Times and sales.
 
 ### Requires
 
-- [Node v14.16.1](https://nodejs.org/)
-- npm v7.11.1
+- [Node v14.17.1](https://nodejs.org/)
+- npm v7.19.0
 
 ### Download
 
