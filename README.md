@@ -1,6 +1,6 @@
 # Times & Sales 🔍 &middot; [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub package.json version](https://img.shields.io/github/package-json/v/lropero/ts)
 
-Times and sales.
+Better times and sales.
 
 ### Requires
 
@@ -30,7 +30,7 @@ $ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT -t'
 Block alert quantity (default 0)
 
 ```sh
-node ts.js -b 1
+node ts.js -b 1 -p BTCUSDT
 ```
 
 ##### `-c` / `--cap <size>`
@@ -38,7 +38,7 @@ node ts.js -b 1
 Filter more than quantity (default 0)
 
 ```sh
-node ts.js -c 0.2
+node ts.js -c 0.2 -p BTCUSDT
 ```
 
 ##### `-f` / `--filter <size>`
@@ -46,7 +46,15 @@ node ts.js -c 0.2
 Filter less than quantity (default 0)
 
 ```sh
-node ts.js -f 0.2
+node ts.js -f 0.2 -p BTCUSDT
+```
+
+##### `-m` / `--mark <step>`
+
+Mark price difference (default 0)
+
+```sh
+node ts.js -m 100 -p BTCUSDT
 ```
 
 ##### `-p` / `--pair <pair>`
@@ -62,7 +70,7 @@ node ts.js -p BTCUSDT
 Show time (default false)
 
 ```sh
-node ts.js -t
+node ts.js -p BTCUSDT -t
 ```
 
 ##### `-h` / `--help`

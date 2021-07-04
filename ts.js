@@ -37,7 +37,7 @@ const run = async options => {
     console.log(`${chalk.green(`Times & Sales v${version}`)} ${chalk[isWindows ? 'white' : 'gray'](`${line} run with -h to output usage information`)}`)
     console.log(chalk.yellow(`Like it? Buy me a ${isWindows ? 'beer' : '🍺'} :) 1B7owVfYhLjWLh9NWivQAKJHBcf8Doq54i (BTC)`))
     const deltas = []
-    let level, previousPrice
+    let level, mark, previousMark, previousPrice
     binance.websockets.trades(options.pair, trade => {
       // const { e: eventType, E: eventTime, s: symbol, t: tradeId, p: price, q: quantity, b: buyerOrderId, a: sellerOrderId, T: tradeTime, m: marketMaker } = trade
       const { p: price, q: quantity, m: marketMaker } = trade
@@ -67,10 +67,23 @@ const run = async options => {
             }
           }
         }
+        mark = ''
+        if (options.mark > 0) {
+          if (previousMark) {
+            const currentMark = price - (price % options.mark)
+            const difference = currentMark - previousMark
+            if (Math.abs(difference) >= options.mark) {
+              mark = difference > 0 ? 'bgGreen' : 'bgRed'
+            }
+            previousMark = currentMark
+          } else {
+            previousMark = price - (price % options.mark)
+          }
+        }
         previousPrice = price
         const blocks = Math.floor(Math.abs(level / 8))
         const eighths = Math.abs(level) - blocks * 8
-        const message = `${chalk[marketMaker ? 'red' : 'green'](price)}${chalk.yellow('\u2595')}${deltas.length === 100 ? chalk[level > 0 ? 'green' : 'red'](`${'\u2588'.repeat(blocks)}${eighths > 0 ? getPartialBlock(eighths) : ''}${' '.repeat(30 - blocks - (eighths > 0 ? 1 : 0))}`) : chalk[isWindows ? 'blue' : 'gray']('\u2591'.repeat(30))}${chalk.yellow('\u258F')}${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgRed' : 'bgGreen'](parseFloat(quantity)) : chalk[marketMaker ? 'red' : 'green'](parseFloat(quantity))}`
+        const message = `${chalk[mark.length > 0 ? mark : marketMaker ? 'cyan' : 'magenta'](price)}${chalk.yellow('\u2595')}${deltas.length === 100 ? chalk[level > 0 ? 'green' : 'red'](`${'\u2588'.repeat(blocks)}${eighths > 0 ? getPartialBlock(eighths) : ''}${' '.repeat(30 - blocks - (eighths > 0 ? 1 : 0))}`) : chalk[isWindows ? 'blue' : 'gray']('\u2591'.repeat(30))}${chalk.yellow('\u258F')}${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgCyan' : 'bgMagenta'](parseFloat(quantity)) : chalk[marketMaker ? 'cyan' : 'magenta'](parseFloat(quantity))}`
         options.time ? log(message) : console.log(message)
       }
     })
@@ -84,6 +97,7 @@ program
   .option('-b, --block <size>', 'block alert quantity (default 0)')
   .option('-c, --cap <size>', 'filter more than quantity (default 0)')
   .option('-f, --filter <size>', 'filter less than quantity (default 0)')
+  .option('-m, --mark <step>', 'mark price difference (default 0)')
   .requiredOption('-p, --pair <pair>', 'pair (required)')
   .option('-t, --time', 'show time (default false)')
   .parse(process.argv)
@@ -94,6 +108,7 @@ run({
   block: options.block ? parseFloat(options.block) : 0,
   cap: options.cap ? parseFloat(options.cap) : 0,
   filter: options.filter ? parseFloat(options.filter) : 0,
+  mark: options.mark ? parseFloat(options.mark) : 0,
   pair: options.pair ?? 'BTCUSDT',
   time: !!options.time
 })

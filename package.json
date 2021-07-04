@@ -1,12 +1,12 @@
 {
   "name": "ts",
-  "version": "0.2.1",
-  "description": "Times and sales.",
+  "version": "0.2.2",
+  "description": "Better times and sales.",
   "scripts": {
     "clean": "npx rimraf npm-*.log && npx rimraf package-lock.json && npx -p rimraf rimraf node_modules && npm cache verify",
     "lint": "npx prettier-standard --lint",
     "nuke": "npm run clean && npm install",
-    "start": "node ts.js -b 1 -p BTCUSDT -t",
+    "start": "node ts.js -b 1 -m 100 -p BTCUSDT -t",
     "upgrade": "npx upgradeps -n"
   },
   "dependencies": {
