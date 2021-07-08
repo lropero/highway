@@ -102,4 +102,4 @@ node highway.js -h
 
 ### Seeing strange characters?
 
-I recommend using font [Cascadia Mono](https://github.com/microsoft/cascadia-code) in your terminal which is proven to work fine, but any TrueType font should fix the problem as well.
+I recommend using [Cascadia Mono](https://github.com/microsoft/cascadia-code) font in your terminal which is proven to work fine, but any TrueType font should fix the problem as well.
