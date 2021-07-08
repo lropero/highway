@@ -2,7 +2,7 @@
 
 Better market trades (times and sales).
 
-<img src="https://github.com/lropero/highway/blob/main/thumbnails/highway.gif?raw=true" width="229">
+<img src="https://github.com/lropero/highway/blob/main/highway.gif?raw=true" width="229">
 
 ### Requires
 
