@@ -25,10 +25,6 @@ $ npm ci
 $ npm run start # will run 'node highway.js -b 1 -m 100 -p BTCUSDT -t'
 ```
 
-### Seeing strange characters?
-
-I recommend using font [Cascadia Mono](https://github.com/microsoft/cascadia-code) in your terminal which is proven to work fine, but any TrueType font should fix the problem as well.
-
 ### Options
 
 ##### `-b` / `--block <size>`
@@ -95,3 +91,7 @@ Display help
 ```sh
 node highway.js -h
 ```
+
+### Seeing strange characters?
+
+I recommend using font [Cascadia Mono](https://github.com/microsoft/cascadia-code) in your terminal which is proven to work fine, but any TrueType font should fix the problem as well.
