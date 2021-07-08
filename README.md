@@ -1,4 +1,4 @@
-# Highway 🔍 &middot; [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub package.json version](https://img.shields.io/github/package-json/v/lropero/highway)
+# Highway 🔍 &middot; [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub package.json version](https://img.shields.io/github/package-json/v/lropero/highway) ![Exchange](https://img.shields.io/badge/Exchange-Binance-yellowgreen)
 
 Better market trades (times and sales).
 
@@ -29,7 +29,7 @@ $ npm run start # will run 'node highway.js -b 1 -m 100 -p BTCUSDT -t'
 
 ##### `-b` / `--block <size>`
 
-Block alert quantity (default 0)
+Block alert quantity
 
 ```sh
 node highway.js -b 1 -p BTCUSDT
@@ -45,7 +45,7 @@ node highway.js -c 0.2 -p BTCUSDT
 
 ##### `-f` / `--filter <size>`
 
-Filter less than quantity (default 0)
+Filter less than quantity
 
 ```sh
 node highway.js -f 0.2 -p BTCUSDT
@@ -53,7 +53,7 @@ node highway.js -f 0.2 -p BTCUSDT
 
 ##### `-m` / `--mark <step>`
 
-Mark price difference (default 0)
+Mark price difference
 
 ```sh
 node highway.js -m 100 -p BTCUSDT
@@ -78,7 +78,7 @@ node highway.js -p BTCUSDT -s sells
 
 ##### `-t` / `--time`
 
-Show time (default false)
+Show time
 
 ```sh
 node highway.js -p BTCUSDT -t
