@@ -1,15 +1,17 @@
-# Times & Sales 🔍 &middot; [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub package.json version](https://img.shields.io/github/package-json/v/lropero/ts)
+# Highway 🔍 &middot; [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub package.json version](https://img.shields.io/github/package-json/v/lropero/highway)
 
-Better times and sales.
+Better market trades (times and sales).
+
+<img src="https://github.com/lropero/highway/blob/main/thumbnails/highway.gif?raw=true" width="229">
 
 ### Requires
 
-- [Node v14.17.1](https://nodejs.org/)
-- npm v7.19.0
+- [Node v14.17.3](https://nodejs.org/)
+- npm v7.19.1
 
 ### Download
 
-- [ts-main.zip](https://github.com/lropero/ts/archive/main.zip) or `git clone https://github.com/lropero/ts.git`
+- [Download ZIP](https://github.com/lropero/highway/archive/refs/heads/main.zip) or `git clone https://github.com/lropero/highway.git`
 
 ### Installation
 
@@ -20,7 +22,7 @@ $ npm ci
 ### Usage
 
 ```sh
-$ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT -t'
+$ npm run start # will run 'node highway.js -b 1 -m 100 -p BTCUSDT -t'
 ```
 
 ### Options
@@ -30,15 +32,15 @@ $ npm run start # will run 'node ts.js -b 1 -f 0.2 -p BTCUSDT -t'
 Block alert quantity (default 0)
 
 ```sh
-node ts.js -b 1 -p BTCUSDT
+node highway.js -b 1 -p BTCUSDT
 ```
 
 ##### `-c` / `--cap <size>`
 
-Filter more than quantity (default 0)
+Filter more than quantity
 
 ```sh
-node ts.js -c 0.2 -p BTCUSDT
+node highway.js -c 0.2 -p BTCUSDT
 ```
 
 ##### `-f` / `--filter <size>`
@@ -46,7 +48,7 @@ node ts.js -c 0.2 -p BTCUSDT
 Filter less than quantity (default 0)
 
 ```sh
-node ts.js -f 0.2 -p BTCUSDT
+node highway.js -f 0.2 -p BTCUSDT
 ```
 
 ##### `-m` / `--mark <step>`
@@ -54,7 +56,7 @@ node ts.js -f 0.2 -p BTCUSDT
 Mark price difference (default 0)
 
 ```sh
-node ts.js -m 100 -p BTCUSDT
+node highway.js -m 100 -p BTCUSDT
 ```
 
 ##### `-p` / `--pair <pair>`
@@ -62,7 +64,16 @@ node ts.js -m 100 -p BTCUSDT
 Pair (required)
 
 ```sh
-node ts.js -p BTCUSDT
+node highway.js -p BTCUSDT
+```
+
+##### `-s` / `--show <type>`
+
+Show market _buys_ or _sells_ only
+
+```sh
+node highway.js -p BTCUSDT -s buys
+node highway.js -p BTCUSDT -s sells
 ```
 
 ##### `-t` / `--time`
@@ -70,7 +81,7 @@ node ts.js -p BTCUSDT
 Show time (default false)
 
 ```sh
-node ts.js -p BTCUSDT -t
+node highway.js -p BTCUSDT -t
 ```
 
 ##### `-h` / `--help`
@@ -78,5 +89,5 @@ node ts.js -p BTCUSDT -t
 Display help
 
 ```sh
-node ts.js -h
+node highway.js -h
 ```
