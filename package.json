@@ -1,12 +1,12 @@
 {
   "name": "highway",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Better market trades (times and sales).",
   "scripts": {
     "clean": "npx rimraf npm-*.log && npx rimraf package-lock.json && npx -p rimraf rimraf node_modules && npm cache verify",
     "lint": "npx prettier-standard --lint",
     "nuke": "npm run clean && npm install",
-    "start": "node highway.js -b 1 -m 100 -p BTCUSDT -t",
+    "start": "node highway.js -b 1 -m 100 -p BTCUSDT -r 2 -t",
     "upgrade": "npx upgradeps -n"
   },
   "dependencies": {

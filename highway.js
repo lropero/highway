@@ -81,7 +81,7 @@ const run = async options => {
         previous.price = price
         const blocks = Math.floor(Math.abs(level / 8))
         const eighths = Math.abs(level) - blocks * 8
-        const message = `${chalk[markColor.length > 0 ? markColor : marketMaker ? 'cyan' : 'magenta'](price)}${chalk.yellow('\u2595')}${deltas.length === 100 ? chalk[level > 0 ? 'green' : 'red'](`${'\u2588'.repeat(blocks)}${eighths > 0 ? getPartialBlock(eighths) : ''}${' '.repeat(30 - blocks - (eighths > 0 ? 1 : 0))}`) : chalk[isWindows ? 'blue' : 'gray']('\u2591'.repeat(30))}${chalk.yellow('\u258F')}${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgCyan' : 'bgMagenta'](parseFloat(quantity)) : chalk[marketMaker ? 'cyan' : 'magenta'](parseFloat(quantity))}`
+        const message = `${chalk[markColor.length > 0 ? markColor : marketMaker ? 'cyan' : 'magenta'](options.round > 0 ? parseFloat(price).toFixed(options.round) : price)}${chalk.yellow('\u2595')}${deltas.length === 100 ? chalk[level > 0 ? 'green' : 'red'](`${'\u2588'.repeat(blocks)}${eighths > 0 ? getPartialBlock(eighths) : ''}${' '.repeat(30 - blocks - (eighths > 0 ? 1 : 0))}`) : chalk[isWindows ? 'blue' : 'gray']('\u2591'.repeat(30))}${chalk.yellow('\u258F')}${options.block > 0 && quantity >= options.block ? chalk[marketMaker ? 'bgCyan' : 'bgMagenta'](parseFloat(quantity)) : chalk[marketMaker ? 'cyan' : 'magenta'](parseFloat(quantity))}`
         options.time ? log(message) : console.log(message)
       }
     })
@@ -97,6 +97,7 @@ program
   .option('-f, --filter <size>', 'filter less than quantity (default 0)', 0)
   .option('-m, --mark <step>', 'mark price difference (default 0)', 0)
   .requiredOption('-p, --pair <pair>', 'pair (required)')
+  .option('-r, --round <decimals>', 'round price to N decimals', 0)
   .option('-s, --show <type>', 'show market [buys|sells] only', '')
   .option('-t, --time', 'show time (default false)', false)
   .parse(process.argv)
@@ -108,7 +109,8 @@ run({
   cap: parseFloat(options.cap),
   filter: parseFloat(options.filter),
   mark: parseFloat(options.mark),
-  pair: options.pair,
-  show: options.show,
-  time: options.time
+  pair: `${options.pair}`,
+  round: parseFloat(options.round),
+  show: `${options.show}`,
+  time: !!options.time
 })

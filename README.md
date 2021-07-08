@@ -22,7 +22,7 @@ $ npm ci
 ### Usage
 
 ```sh
-$ npm run start # will run 'node highway.js -b 1 -m 100 -p BTCUSDT -t'
+$ npm run start # will run 'node highway.js -b 1 -m 100 -p BTCUSDT -r 2 -t'
 ```
 
 ### Options
@@ -65,6 +65,14 @@ Pair (required)
 
 ```sh
 node highway.js -p BTCUSDT
+```
+
+##### `-r` / `--round <decimals>`
+
+Round price to N decimals
+
+```sh
+node highway.js -p BTCUSDT -r 2
 ```
 
 ##### `-s` / `--show <type>`
