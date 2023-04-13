@@ -22,10 +22,7 @@ node highway.js <SYMBOL> # e.g. 'node highway.js BTCUSDT'
 ```
 
 ```sh
-npm run start # BTCUSDT 1m candles
-npm run start:3m # BTCUSDT 3m candles
-npm run start:5m # BTCUSDT 5m candles
-npm run start:15m # BTCUSDT 15m candles
+npm run start # BTCUSDT -b 1
 ```
 
 ### Options
