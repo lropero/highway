@@ -2,6 +2,8 @@
 
 Trading tape.
 
+![highway](https://user-images.githubusercontent.com/4450399/231820546-9c85f795-2885-4da5-b279-94e31bd4c5e3.gif)
+
 ### Requires
 
 - [Node v18.16.0](https://nodejs.org/)
