@@ -1,26 +1,35 @@
 {
   "name": "highway",
-  "version": "1.1.0",
-  "description": "Better market trades (times and sales).",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Trading tape.",
+  "license": "UNLICENSED",
+  "author": "Luciano Ropero <lropero@gmail.com>",
+  "type": "module",
   "scripts": {
-    "clean": "npx rimraf npm-*.log && npx rimraf package-lock.json && npx -p rimraf rimraf node_modules && npm cache verify",
-    "lint": "npx prettier-standard --lint",
-    "nuke": "npm run clean && npm install",
-    "start": "node highway.js -b 1 -m 100 -p BTCUSDT -r 2 -t",
-    "upgrade": "npx upgradeps -n"
+    "audit": "npx upgradeps -v",
+    "clean": "npx rimraf node_modules && npx rimraf package-lock.json",
+    "lint": "npx prettier --write . && npx standard --fix",
+    "nuke": "npm run clean && npm cache verify && npm install",
+    "sort": "npx sort-package-json",
+    "start": "node highway.js BTCUSDT -b 1"
   },
   "dependencies": {
-    "chalk": "^4.1.1",
-    "commander": "^8.0.0",
-    "figures": "^3.2.0",
-    "node-binance-api": "^0.12.5"
+    "blessed": "0.1.81",
+    "cfonts": "3.1.1",
+    "chalk": "5.2.0",
+    "commander": "10.0.0",
+    "date-fns": "2.29.3",
+    "figures": "5.0.0",
+    "jsonfile": "6.1.0",
+    "lodash": "4.17.21",
+    "ws": "8.13.0"
   },
   "devDependencies": {
-    "prettier-standard": "^16.4.1",
-    "rimraf": "^3.0.2",
-    "upgradeps": "^1.4.3"
-  },
-  "author": "Luciano Ropero <lropero@gmail.com>",
-  "license": "UNLICENSED",
-  "private": true
+    "prettier": "2.8.7",
+    "rimraf": "5.0.0",
+    "sort-package-json": "2.4.1",
+    "standard": "17.0.0",
+    "upgradeps": "2.0.5"
+  }
 }

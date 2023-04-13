@@ -1,105 +1,61 @@
 # Highway 🔍 &middot; [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) ![GitHub package.json version](https://img.shields.io/github/package-json/v/lropero/highway) ![Exchange](https://img.shields.io/badge/Exchange-Binance-yellowgreen)
 
-Better market trades (times and sales).
-
-<img src="https://github.com/lropero/highway/blob/main/highway.gif?raw=true" width="229">
+Trading tape.
 
 ### Requires
 
-- [Node v14.17.3](https://nodejs.org/)
-- npm v7.19.1
-
-### Download
-
-- [Download ZIP](https://github.com/lropero/highway/archive/refs/heads/main.zip) or `git clone https://github.com/lropero/highway.git`
+- [Node v18.16.0](https://nodejs.org/)
+- npm v9.6.4
 
 ### Installation
 
 ```sh
-$ npm ci
+npm ci
 ```
 
 ### Usage
 
 ```sh
-$ npm run start # will run 'node highway.js -b 1 -m 100 -p BTCUSDT -r 2 -t'
+node highway.js <SYMBOL> # e.g. 'node highway.js BTCUSDT'
+```
+
+```sh
+npm run start # BTCUSDT 1m candles
+npm run start:3m # BTCUSDT 3m candles
+npm run start:5m # BTCUSDT 5m candles
+npm run start:15m # BTCUSDT 15m candles
 ```
 
 ### Options
 
-##### `-b` / `--block <size>`
+##### `-b <size>` / `--block <size>`
 
-Block alert quantity
-
-```sh
-node highway.js -b 1 -p BTCUSDT
-```
-
-##### `-c` / `--cap <size>`
-
-Filter more than quantity
+Mark block quantity (default 0).
 
 ```sh
-node highway.js -c 0.2 -p BTCUSDT
+node highway.js <SYMBOL> -b <size> # e.g. 'node highway.js BTCUSDT -b 1'
 ```
 
-##### `-f` / `--filter <size>`
+##### `-c <size>` / `--cap <size>`
 
-Filter less than quantity
+Exclude more than quantity (default 0).
 
 ```sh
-node highway.js -f 0.2 -p BTCUSDT
+node highway.js <SYMBOL> -c <size> # e.g. 'node highway.js BTCUSDT -c 1'
 ```
 
-##### `-m` / `--mark <step>`
+##### `-f <size>` / `--filter <size>`
 
-Mark price difference
+Exclude less than quantity (default 0).
 
 ```sh
-node highway.js -m 100 -p BTCUSDT
+node highway.js <SYMBOL> -f <size> # e.g. 'node highway.js BTCUSDT -f 1'
 ```
 
-##### `-p` / `--pair <pair>`
+##### `-m <type>` / `--market <type>`
 
-Pair (required)
+Show only "buy" or "sell" orders.
 
 ```sh
-node highway.js -p BTCUSDT
+node highway.js <SYMBOL> -m <type> # e.g. 'node highway.js BTCUSDT -m buy'
 ```
-
-##### `-r` / `--round <decimals>`
-
-Round price to N decimals
-
-```sh
-node highway.js -p BTCUSDT -r 2
-```
-
-##### `-s` / `--show <type>`
-
-Show market _buys_ or _sells_ only
-
-```sh
-node highway.js -p BTCUSDT -s buys
-node highway.js -p BTCUSDT -s sells
-```
-
-##### `-t` / `--time`
-
-Show time
-
-```sh
-node highway.js -p BTCUSDT -t
-```
-
-##### `-h` / `--help`
-
-Display help
-
-```sh
-node highway.js -h
-```
-
-### Seeing strange characters?
-
-I recommend using [Cascadia Mono](https://github.com/microsoft/cascadia-code) font in your terminal which is proven to work fine, but any TrueType font should fix the problem as well.
