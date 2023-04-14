@@ -12,7 +12,9 @@
     "lint": "npx prettier --write . && npx standard --fix",
     "nuke": "npm run clean && npm cache verify && npm install",
     "sort": "npx sort-package-json",
-    "start": "node highway.js BTCUSDT -b 1"
+    "start": "node highway.js BTCUSDT -b 1",
+    "start:buy": "node highway.js BTCUSDT -b 10 -f 1 -m buy",
+    "start:sell": "node highway.js BTCUSDT -b 10 -f 1 -m sell"
   },
   "dependencies": {
     "blessed": "0.1.81",

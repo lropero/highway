@@ -261,9 +261,10 @@ program
       const cap = parseFloat(options.cap) > 0 ? parseFloat(options.cap) : 0
       const filter = parseFloat(options.filter) > 0 ? parseFloat(options.filter) : 0
       const market = ['buy', 'sell'].includes((options.market ?? '').toLowerCase()) ? options.market.toLowerCase() : ''
+      const header = chalk.white(`${chalk.green(`${name.charAt(0).toUpperCase()}${name.slice(1)}`)} v${version} - ${chalk.cyan('q')}uit ${chalk.yellow(`${block > 0 ? `-b ${block} ` : ''}${cap > 0 ? `-c ${cap} ` : ''}${filter > 0 ? `-f ${filter} ` : ''}${market.length > 0 ? `-m ${market}` : ''}`.trimEnd())}`)
       const webSocket = await createWebSocket()
       const screen = blessed.screen({ forceUnicode: true, fullUnicode: true, smartCSR: true })
-      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, header: chalk.white(`${chalk.green(`${name.charAt(0).toUpperCase()}${name.slice(1)}`)} v${version} - ${chalk.cyan('q')}uit`), market, screen, symbol, timers: {}, trades: [], webSocket })
+      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, header, market, screen, symbol, timers: {}, trades: [], webSocket })
       start(`${name.charAt(0).toUpperCase()}${name.slice(1)} v${version}`)
     } catch (error) {
       console.log(`${chalk.red(figures.cross)} ${error.toString()}`)

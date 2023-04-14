@@ -23,6 +23,8 @@ node highway.js <SYMBOL> # e.g. 'node highway.js BTCUSDT'
 
 ```sh
 npm run start # BTCUSDT -b 1
+npm run start:buy # BTCUSDT -b 10 -f 1 -m buy
+npm run start:sell # BTCUSDT -b 10 -f 1 -m sell
 ```
 
 ### Options
