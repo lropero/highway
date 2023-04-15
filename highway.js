@@ -223,7 +223,7 @@ const updateStore = updates => {
           }
           trade.level = calculateLevel(trade.price)
           if ((cap === 0 || trade.quantity < cap) && (filter === 0 || trade.quantity >= filter) && (market === '' || (market === 'buy' && !marketMaker) || (market === 'sell' && marketMaker))) {
-            trades.unshift(`${chalk.white(format(trade.tradeTime, 'HH:mm:ss'))} ${chalk[trade.marketMaker ? 'magenta' : 'cyan'](currency.format(trade.price))}${chalk.yellow('\u2595')}${getLine(trade)}${chalk.yellow('\u258F')}${chalk[trade.marketMaker ? (block > 0 && trade.quantity >= block ? 'bgMagenta' : 'magenta') : block > 0 && trade.quantity >= block ? 'bgCyan' : 'cyan'](trade.quantity)}`)
+            trades.unshift(`${chalk.white(format(trade.tradeTime, 'HH:mm'))} ${chalk[trade.marketMaker ? 'magenta' : 'cyan'](currency.format(trade.price))}${chalk.yellow('\u2595')}${getLine(trade)}${chalk.yellow('\u258F')}${chalk[trade.marketMaker ? (block > 0 && trade.quantity >= block ? 'bgMagenta' : 'magenta') : block > 0 && trade.quantity >= block ? 'bgCyan' : 'cyan'](trade.quantity)}`)
             if (trades.length > 500) {
               do {
                 trades.pop()
