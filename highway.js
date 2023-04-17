@@ -134,14 +134,14 @@ const createWebSocket = () =>
   })
 
 const draw = () => {
-  const { boxes, currency, directionColor, header, lastTrade, screen, symbol, trades } = store
+  const { boxes, currency, directionColor, header, lastTrade, screen, speed, symbol, trades } = store
   if (lastTrade) {
     const symbolRender = cfonts.render(symbol, { colors: ['white'], font: 'tiny', space: false })
     boxes.symbol.setContent(symbolRender.string)
     const priceRender = cfonts.render(currency.format(lastTrade.price), { colors: [directionColor], font: 'tiny', space: false })
     boxes.price.setContent(priceRender.string)
   }
-  boxes.info.setContent(` ${header}`)
+  boxes.info.setContent(` ${header} ${speed}${chalk.white('/m')}`)
   const slice = trades.slice(0, screen.height - 3)
   if (slice.length > 0) {
     if (screen.height - 3 > 0) {
@@ -223,6 +223,10 @@ const updateStore = updates => {
           }
           trade.level = calculateLevel(trade.price)
           if ((cap === 0 || trade.quantity < cap) && (filter === 0 || trade.quantity >= filter) && (market === '' || (market === 'buy' && !marketMaker) || (market === 'sell' && marketMaker))) {
+            store.speed++
+            setTimeout(() => {
+              store.speed--
+            }, 60000)
             trades.unshift(`${chalk.white(format(trade.tradeTime, 'HH:mm'))} ${chalk[trade.marketMaker ? 'magenta' : 'cyan'](currency.format(trade.price))}${chalk.yellow('\u2595')}${getLine(trade)}${chalk.yellow('\u258F')}${chalk[trade.marketMaker ? (block > 0 && trade.quantity >= block ? 'bgMagenta' : 'magenta') : block > 0 && trade.quantity >= block ? 'bgCyan' : 'cyan'](trade.quantity)}`)
             if (trades.length > 500) {
               do {
@@ -264,7 +268,7 @@ program
       const header = chalk.white(`${chalk.green(`${name.charAt(0).toUpperCase()}${name.slice(1)}`)} v${version} - ${chalk.cyan('q')}uit ${chalk.yellow(`${block > 0 ? `-b ${block} ` : ''}${cap > 0 ? `-c ${cap} ` : ''}${filter > 0 ? `-f ${filter} ` : ''}${market.length > 0 ? `-m ${market}` : ''}`.trimEnd())}`)
       const webSocket = await createWebSocket()
       const screen = blessed.screen({ forceUnicode: true, fullUnicode: true, smartCSR: true })
-      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, header, market, screen, symbol, timers: {}, trades: [], webSocket })
+      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, header, market, screen, speed: 0, symbol, timers: {}, trades: [], webSocket })
       start(`${name.charAt(0).toUpperCase()}${name.slice(1)} v${version}`)
     } catch (error) {
       console.log(`${chalk.red(figures.cross)} ${error.toString()}`)
