@@ -35,14 +35,14 @@ const addBox = type => {
       break
     }
     case 'display': {
-      const priceBox = blessed.box({ height: 2, left: symbol.length * 4 + 1, style: { bg: 'blue' } })
-      const symbolBox = blessed.box({ height: 2, style: { bg: 'blue' } })
+      const priceBox = blessed.box({ height: 2, left: symbol.length * 4 + 1, style: { bg: 'black' } })
+      const symbolBox = blessed.box({ height: 2, style: { bg: 'black' } })
       append({ box: symbolBox, type: 'symbol' })
       append({ box: priceBox, type: 'price' })
       break
     }
     case 'info': {
-      const box = blessed.box({ height: 1, style: { bg: 'blue' }, top: 2, width: screen.width })
+      const box = blessed.box({ height: 1, style: { bg: 'black' }, top: 2, width: screen.width })
       append({ box, type })
       break
     }
@@ -141,7 +141,7 @@ const draw = () => {
     const priceRender = cfonts.render(currency.format(lastTrade.price), { colors: [directionColor], font: 'tiny', space: false })
     boxes.price.setContent(priceRender.string)
   }
-  boxes.info.setContent(` ${header} ${chalk.white(speed.tick)}${chalk.yellow(`/m (${chalk.cyan(speed.buy.toFixed(2))}/${chalk.magenta(speed.sell.toFixed(2))})`)}`)
+  boxes.info.setContent(` ${header} ${chalk.white(speed.tick)}${chalk.yellow(`/m (${chalk.cyan(speed.buy.toFixed(2))}/${chalk.magenta(speed.sell.toFixed(2))}${speed.buy > 0 && speed.sell > 0 ? `=${(speed.buy / speed.sell).toFixed(2)}` : ''})`)}`)
   const slice = trades.slice(0, screen.height - 3)
   if (slice.length > 0) {
     if (screen.height - 3 > 0) {
