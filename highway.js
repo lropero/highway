@@ -141,7 +141,15 @@ const draw = () => {
     const priceRender = cfonts.render(currency.format(lastTrade.price), { colors: [directionColor], font: 'tiny', space: false })
     boxes.price.setContent(priceRender.string)
   }
-  boxes.info.setContent(` ${header} ${chalk.white(speed.tick)}${chalk.yellow(`/m (${chalk.cyan(speed.buy.toFixed(2))}/${chalk.magenta(speed.sell.toFixed(2))}${speed.buy > 0 && speed.sell > 0 ? `=${(speed.buy / speed.sell).toFixed(2)}` : ''})`)}`)
+  let ratio = 0
+  if (speed.buy > 0 && speed.sell > 0) {
+    if (speed.buy > speed.sell) {
+      ratio = speed.buy / speed.sell
+    } else if (speed.sell > speed.buy) {
+      ratio = speed.sell / speed.buy
+    }
+  }
+  boxes.info.setContent(` ${header} ${chalk.white(speed.tick)}${chalk.yellow(`/m (${chalk.cyan(speed.buy.toFixed(2))}/${chalk.magenta(speed.sell.toFixed(2))}${ratio > 0 ? `=${chalk[speed.buy > speed.sell ? 'black' : 'white'](chalk[speed.buy > speed.sell ? 'bgCyan' : 'bgMagenta'](ratio.toFixed(2)))}` : ''})`)}`)
   const slice = trades.slice(0, screen.height - 3)
   if (slice.length > 0) {
     if (screen.height - 3 > 0) {
