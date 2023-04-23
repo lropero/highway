@@ -142,7 +142,7 @@ const draw = () => {
     boxes.price.setContent(priceRender.string)
   }
   let ratio = 0
-  if (speed.buy > 0 && speed.sell > 0) {
+  if (speed.buy.toFixed(2) !== '0.00' && speed.sell.toFixed(2) !== '0.00') {
     if (speed.buy > speed.sell) {
       ratio = speed.buy / speed.sell
     } else if (speed.sell > speed.buy) {

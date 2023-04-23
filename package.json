@@ -28,7 +28,7 @@
     "ws": "8.13.0"
   },
   "devDependencies": {
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "rimraf": "5.0.0",
     "sort-package-json": "2.4.1",
     "standard": "17.0.0",
