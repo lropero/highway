@@ -104,7 +104,7 @@ const calculateLevel = price => {
 const connect = () => {
   const { symbol, timers, webSocket } = store
   timers.list && clearInterval(timers.list)
-  webSocket.send(JSON.stringify({ method: 'SUBSCRIBE', params: [`${symbol.toLowerCase()}@aggTrade`] }))
+  webSocket.send(JSON.stringify({ id: 1, method: 'SUBSCRIBE', params: [`${symbol.toLowerCase()}@aggTrade`] }))
   timers.list = setInterval(() => {
     const { webSocket } = store
     webSocket.send(JSON.stringify({ id: 1337, method: 'LIST_SUBSCRIPTIONS' }))
