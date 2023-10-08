@@ -22,33 +22,31 @@ import { format } from 'date-fns'
 import { program } from 'commander'
 
 const BINANCE = 'wss://fstream.binance.com/ws'
-const HIGHWAY = { deltas: 100, level: 320 }
+const HIGHWAY = { deltas: 1000, level: 320 }
 
 const store = {}
 
 const addBox = type => {
-  const { screen, symbol } = store
   switch (type) {
     case 'disconnected': {
-      const box = blessed.box({ content: 'disconnected, attempting to reconnect...', height: 1, left: Math.round(screen.width / 2) - 20, style: { bg: 'red' }, top: 3, width: 40 })
-      append({ box, type })
+      const { screen } = store
+      append({ box: blessed.box({ content: 'DISCONNECTED, ATTEMPTING TO RECONNECT...', height: 1, left: Math.round(screen.width / 2) - 20, style: { bg: 'red' }, top: 2, width: 40 }), type })
       break
     }
     case 'display': {
-      const priceBox = blessed.box({ height: 2, left: symbol.length * 4 + 1, style: { bg: 'black' } })
-      const symbolBox = blessed.box({ height: 2, style: { bg: 'black' } })
-      append({ box: symbolBox, type: 'symbol' })
-      append({ box: priceBox, type: 'price' })
+      const { symbol } = store
+      append({ box: blessed.box({ height: 2, style: { bg: 'black' } }), type: 'symbol' })
+      append({ box: blessed.box({ height: 2, left: symbol.length * 4 + 1, style: { bg: 'black' } }), type: 'price' })
       break
     }
     case 'info': {
-      const box = blessed.box({ height: 1, style: { bg: 'black' }, top: 2, width: screen.width })
-      append({ box, type })
+      const { screen } = store
+      append({ box: blessed.box({ height: 6, style: { bg: 'black' }, top: 2, width: screen.width }), type })
       break
     }
     case 'tape': {
-      const box = blessed.box({ height: screen.height - 3, style: { bg: 'black' }, top: 3, width: screen.width })
-      append({ box, type })
+      const { screen } = store
+      append({ box: blessed.box({ height: screen.height - 8, style: { bg: 'black' }, top: 8, width: screen.width }), type })
       break
     }
   }
@@ -56,7 +54,7 @@ const addBox = type => {
 
 const addBoxes = () => {
   const { boxes } = store
-  const types = ['tape', 'info', 'display']
+  const types = ['display', 'info', 'tape']
   types.forEach(type => addBox(type))
   boxes.disconnected && addBox('disconnected')
 }
@@ -71,11 +69,11 @@ const append = ({ box, type }) => {
 }
 
 const calculateLevel = price => {
-  const { lastTrade } = store
-  if (!lastTrade) {
+  const { last } = store
+  if (!last) {
     return 0
   }
-  const delta = Math.abs(price - lastTrade.price)
+  const delta = Math.abs(price - last.price)
   if (delta > 0) {
     const { deltas } = store
     deltas.push(delta)
@@ -85,10 +83,10 @@ const calculateLevel = price => {
       } while (deltas.length > HIGHWAY.deltas)
     }
     const average = deltas.reduce((average, delta) => average + delta, 0) / deltas.length
-    let level = lastTrade.level
-    if (price < lastTrade.price) {
+    let level = last.level
+    if (price < last.price) {
       level -= Math.round((delta / average) * 8)
-    } else if (price > lastTrade.price) {
+    } else if (price > last.price) {
       level += Math.round((delta / average) * 8)
     }
     if (level > HIGHWAY.level) {
@@ -98,7 +96,7 @@ const calculateLevel = price => {
     }
     return level
   }
-  return lastTrade.level
+  return last.level
 }
 
 const connect = () => {
@@ -134,31 +132,47 @@ const createWebSocket = () =>
   })
 
 const draw = () => {
-  const { boxes, currency, directionColor, header, lastTrade, screen, speed, symbol, trades } = store
-  if (lastTrade) {
-    const symbolRender = cfonts.render(symbol, { colors: ['white'], font: 'tiny', space: false })
-    boxes.symbol.setContent(symbolRender.string)
-    const priceRender = cfonts.render(currency.format(lastTrade.price), { colors: [directionColor], font: 'tiny', space: false })
-    boxes.price.setContent(priceRender.string)
+  const { boxes, last, screen, trades } = store
+  if (last) {
+    boxes.symbol.setContent(getFont('symbol'))
+    boxes.price.setContent(getFont('price'))
   }
-  let ratio = 0
-  if (speed.buy.toFixed(2) !== '0.00' && speed.sell.toFixed(2) !== '0.00') {
-    if (speed.buy > speed.sell) {
-      ratio = speed.buy / speed.sell
-    } else if (speed.sell > speed.buy) {
-      ratio = speed.sell / speed.buy
-    }
-  }
-  boxes.info.setContent(` ${header} ${chalk.white(speed.tick)}${chalk.yellow(`/m (${chalk.cyan(speed.buy.toFixed(2))}/${chalk.magenta(speed.sell.toFixed(2))}${ratio > 0 ? `=${chalk[speed.buy > speed.sell ? 'black' : 'white'](chalk[speed.buy > speed.sell ? 'bgCyan' : 'bgMagenta'](ratio.toFixed(2)))}` : ''})`)}`)
-  const slice = trades.slice(0, screen.height - 3)
+  boxes.info.setContent(getFont('info'))
+  const slice = trades.slice(0, screen.height - 8)
   if (slice.length > 0) {
-    if (screen.height - 3 > 0) {
+    if (screen.height - 8 > 0) {
       boxes.tape.setContent(slice.map(trade => ` ${trade}`).join('\n'))
     } else {
       boxes.tape.setContent('')
     }
   }
   screen.render()
+}
+
+const getFont = string => {
+  switch (string) {
+    case 'info': {
+      const { speed } = store
+      if (speed.tick > 0 && speed.buy.toFixed(2) !== '0.00' && speed.sell.toFixed(2) !== '0.00') {
+        let ratio = 1
+        if (speed.buy > speed.sell) {
+          ratio = speed.buy / speed.sell
+        } else if (speed.sell > speed.buy) {
+          ratio = speed.sell / speed.buy
+        }
+        return cfonts.render(`${speed.tick}`, { colors: [ratio >= 2 ? (speed.buy > speed.sell ? 'cyan' : 'magenta') : 'yellow'], font: 'block', space: false }).string
+      }
+      return cfonts.render('0', { colors: ['white'], font: 'block', space: false }).string
+    }
+    case 'price': {
+      const { currency, directionColor, last } = store
+      return cfonts.render(currency.format(last.price), { colors: [directionColor], font: 'tiny', space: false }).string
+    }
+    case 'symbol': {
+      const { symbol } = store
+      return cfonts.render(symbol, { colors: ['white'], font: 'tiny', space: false }).string
+    }
+  }
 }
 
 const getLine = trade => {
@@ -222,7 +236,7 @@ const updateStore = updates => {
     } else {
       switch (key) {
         case 'trade': {
-          const { block, boxes, cap, currency, directionColor, filter, lastTrade, market, screen, trades } = store
+          const { block, boxes, cap, currency, directionColor, filter, last, market, screen, trades } = store
           const { m: marketMaker, p: price, q: quantity, T: tradeTime } = updates[key]
           const trade = { marketMaker, price: parseFloat(price), quantity: parseFloat(quantity), tradeTime }
           if (boxes.disconnected) {
@@ -246,13 +260,13 @@ const updateStore = updates => {
               }
             }, 60000)
             trades.unshift(`${chalk.white(format(trade.tradeTime, 'HH:mm'))} ${chalk[trade.marketMaker ? 'magenta' : 'cyan'](currency.format(trade.price))}${chalk.yellow('\u2595')}${getLine(trade)}${chalk.yellow('\u258F')}${chalk[trade.marketMaker ? (block > 0 && trade.quantity >= block ? 'bgMagenta' : 'magenta') : block > 0 && trade.quantity >= block ? 'bgCyan' : 'cyan'](trade.quantity)}`)
-            if (trades.length > 500) {
+            if (trades.length > 1000) {
               do {
                 trades.pop()
-              } while (trades.length > 500)
+              } while (trades.length > 1000)
             }
           }
-          updateStore({ directionColor: trade.price > lastTrade?.price ? 'green' : trade.price < lastTrade?.price ? 'red' : directionColor ?? 'white', lastTrade: trade })
+          updateStore({ directionColor: trade.price > last?.price ? 'green' : trade.price < last?.price ? 'red' : directionColor ?? 'white', last: trade })
           break
         }
         case 'webSocket': {
@@ -283,10 +297,9 @@ program
       const cap = parseFloat(options.cap) > 0 ? parseFloat(options.cap) : 0
       const filter = parseFloat(options.filter) > 0 ? parseFloat(options.filter) : 0
       const market = ['buy', 'sell'].includes((options.market ?? '').toLowerCase()) ? options.market.toLowerCase() : ''
-      const header = chalk.white(`${chalk.green(`${name.charAt(0).toUpperCase()}${name.slice(1)}`)} v${version} - ${chalk.cyan('q')}uit ${chalk.yellow(`${block > 0 ? `-b ${block} ` : ''}${cap > 0 ? `-c ${cap} ` : ''}${filter > 0 ? `-f ${filter} ` : ''}${market.length > 0 ? `-m ${market}` : ''}`.trimEnd())}`)
       const webSocket = await createWebSocket()
       const screen = blessed.screen({ forceUnicode: true, fullUnicode: true, smartCSR: true })
-      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, header, market, screen, speed: { buy: 0, sell: 0, tick: 0 }, symbol, timers: {}, trades: [], webSocket })
+      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, market, screen, speed: { buy: 0, sell: 0, tick: 0 }, symbol, timers: {}, trades: [], webSocket })
       start(`${name.charAt(0).toUpperCase()}${name.slice(1)} v${version}`)
     } catch (error) {
       console.log(`${chalk.red(figures.cross)} ${error.toString()}`)

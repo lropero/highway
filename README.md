@@ -6,8 +6,8 @@ Trading tape.
 
 ### Requires
 
-- [Node v18.17.1](https://nodejs.org/)
-- npm v10.0.0
+- [Node v18.18.0](https://nodejs.org/)
+- npm v10.2.0
 
 ### Installation
 
