@@ -153,16 +153,18 @@ const getFont = string => {
   switch (string) {
     case 'info': {
       const { speed } = store
-      if (speed.tick > 0 && speed.buy.toFixed(2) !== '0.00' && speed.sell.toFixed(2) !== '0.00') {
-        let ratio = 1
-        if (speed.buy > speed.sell) {
-          ratio = speed.buy / speed.sell
-        } else if (speed.sell > speed.buy) {
-          ratio = speed.sell / speed.buy
+      let color = 'white'
+      if (speed.tick > 0) {
+        color = 'yellow'
+        if (speed.buy.toFixed(2) !== '0.00' && speed.sell.toFixed(2) !== '0.00') {
+          if (speed.buy / speed.sell >= 2) {
+            color = 'cyan'
+          } else if (speed.sell / speed.buy >= 2) {
+            color = 'magenta'
+          }
         }
-        return cfonts.render(`${speed.tick}`, { colors: [ratio >= 2 ? (speed.buy > speed.sell ? 'cyan' : 'magenta') : 'yellow'], font: 'block', space: false }).string
       }
-      return cfonts.render('0', { colors: ['white'], font: 'block', space: false }).string
+      return cfonts.render(`${speed.tick}`, { colors: [color], font: 'block', space: false }).string
     }
     case 'price': {
       const { currency, directionColor, last } = store
