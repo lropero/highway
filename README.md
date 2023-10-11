@@ -6,7 +6,7 @@ Trading tape.
 
 ### Requires
 
-- [Node v18.18.0](https://nodejs.org/)
+- [Node v18.18.1](https://nodejs.org/)
 - npm v10.2.0
 
 ### Installation
@@ -28,6 +28,14 @@ npm run start:sell # BTCUSDT -b 10 -f 1 -m sell
 ```
 
 ### Options
+
+##### `-a <ticks>` / `--alarm <ticks>`
+
+Trigger alarm on ticks (default 0).
+
+```sh
+node highway.js <SYMBOL> -a <ticks> # e.g. 'node highway.js BTCUSDT -a 1000'
+```
 
 ##### `-b <size>` / `--block <size>`
 

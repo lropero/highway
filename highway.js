@@ -18,11 +18,13 @@ import chalk from 'chalk'
 import figures from 'figures'
 import jsonfile from 'jsonfile'
 import WebSocket from 'ws'
+import { exec } from 'child_process'
 import { format } from 'date-fns'
 import { program } from 'commander'
 
 const BINANCE = 'wss://fstream.binance.com/ws'
 const HIGHWAY = { deltas: 1000, level: 320 }
+const PLAY = { darwin: 'afplay <SOUND>', win32: '"C:\\Program Files\\VideoLAN\\VLC\\vlc.exe" --intf=null --play-and-exit <SOUND>' }
 
 const store = {}
 
@@ -116,16 +118,10 @@ const createWebSocket = () =>
     webSocket.on('error', error => reject(error))
     webSocket.on('message', message => {
       const { e, ...rest } = JSON.parse(message)
-      switch (e) {
-        case 'aggTrade': {
-          updateStore({ trade: rest })
-          break
-        }
-        default: {
-          if (rest.id === 1337 && rest.result.length === 1) {
-            resetWatchdog()
-          }
-        }
+      if (e === 'aggTrade') {
+        updateStore({ trade: rest })
+      } else if (rest.id === 1337 && rest.result.length === 1) {
+        resetWatchdog()
       }
     })
     webSocket.on('open', () => resolve(webSocket))
@@ -205,6 +201,10 @@ const getPartialBlock = eighths => {
   }
 }
 
+const play = sound => {
+  PLAY[process.platform] && exec(PLAY[process.platform].replace('<SOUND>', `mp3/${sound}.mp3`))
+}
+
 const resetWatchdog = () => {
   const { timers } = store
   timers.reconnect && clearTimeout(timers.reconnect)
@@ -247,18 +247,30 @@ const updateStore = updates => {
           }
           trade.level = calculateLevel(trade.price)
           if ((cap === 0 || trade.quantity < cap) && (filter === 0 || trade.quantity >= filter) && (market === '' || (market === 'buy' && !trade.marketMaker) || (market === 'sell' && trade.marketMaker))) {
-            store.speed.tick++
+            const { alarm, speed } = store
+            speed.tick++
             if (trade.marketMaker) {
-              store.speed.sell += trade.quantity
+              speed.sell += trade.quantity
             } else {
-              store.speed.buy += trade.quantity
+              speed.buy += trade.quantity
+            }
+            if (alarm > 0 && speed.tick >= alarm) {
+              const { alarmTriggered } = store
+              if (!alarmTriggered) {
+                play('alarm')
+                updateStore({ alarmTriggered: true })
+              }
             }
             setTimeout(() => {
-              store.speed.tick--
+              const { alarm, alarmTriggered, speed } = store
+              speed.tick--
               if (trade.marketMaker) {
-                store.speed.sell -= trade.quantity
+                speed.sell -= trade.quantity
               } else {
-                store.speed.buy -= trade.quantity
+                speed.buy -= trade.quantity
+              }
+              if (alarmTriggered && speed.tick < alarm) {
+                delete store.alarmTriggered
               }
             }, 60000)
             trades.unshift(`${chalk.white(format(trade.tradeTime, 'HH:mm'))} ${chalk[trade.marketMaker ? 'magenta' : 'cyan'](currency.format(trade.price))}${chalk.yellow('\u2595')}${getLine(trade)}${chalk.yellow('\u258F')}${chalk[trade.marketMaker ? (block > 0 && trade.quantity >= block ? 'bgMagenta' : 'magenta') : block > 0 && trade.quantity >= block ? 'bgCyan' : 'cyan'](trade.quantity)}`)
@@ -288,6 +300,7 @@ const updateStore = updates => {
 
 program
   .argument('<symbol>', 'symbol')
+  .option('-a, --alarm <ticks>', 'trigger alarm on ticks (default 0)', 0)
   .option('-b, --block <size>', 'mark block quantity (default 0)', 0)
   .option('-c, --cap <size>', 'exclude more than quantity (default 0)', 0)
   .option('-f, --filter <size>', 'exclude less than quantity (default 0)', 0)
@@ -295,13 +308,14 @@ program
   .action(async (symbol, options) => {
     try {
       const { name, version } = await jsonfile.readFile('./package.json')
+      const alarm = parseInt(options.alarm, 10) > 0 ? parseInt(options.alarm, 10) : 0
       const block = parseFloat(options.block) > 0 ? parseFloat(options.block) : 0
       const cap = parseFloat(options.cap) > 0 ? parseFloat(options.cap) : 0
       const filter = parseFloat(options.filter) > 0 ? parseFloat(options.filter) : 0
       const market = ['buy', 'sell'].includes((options.market ?? '').toLowerCase()) ? options.market.toLowerCase() : ''
       const webSocket = await createWebSocket()
       const screen = blessed.screen({ forceUnicode: true, fullUnicode: true, smartCSR: true })
-      updateStore({ block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, market, screen, speed: { buy: 0, sell: 0, tick: 0 }, symbol, timers: {}, trades: [], webSocket })
+      updateStore({ alarm, block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, market, screen, speed: { buy: 0, sell: 0, tick: 0 }, symbol, timers: {}, trades: [], webSocket })
       start(`${name.charAt(0).toUpperCase()}${name.slice(1)} v${version}`)
     } catch (error) {
       console.log(`${chalk.red(figures.cross)} ${error.toString()}`)
