@@ -148,7 +148,7 @@ const draw = () => {
 const getFont = string => {
   switch (string) {
     case 'info': {
-      const { speed } = store
+      const { market, speed } = store
       let color = 'white'
       if (speed.tick > 0) {
         color = 'yellow'
@@ -160,7 +160,7 @@ const getFont = string => {
           }
         }
       }
-      return cfonts.render(`${speed.tick}`, { colors: [color], font: 'block', space: false }).string
+      return cfonts.render(`${speed.tick}`, { colors: [color, market.length === 0 ? 'white' : market === 'buy' ? 'cyan' : 'magenta'], font: 'block', space: false }).string
     }
     case 'price': {
       const { currency, directionColor, last } = store
