@@ -307,7 +307,7 @@ program
   .option('-m, --market <type>', 'show only "buy" or "sell" orders')
   .action(async (symbol, options) => {
     try {
-      const { name, version } = await jsonfile.readFile('./package.json')
+      const { name } = await jsonfile.readFile('./package.json')
       const alarm = parseInt(options.alarm, 10) > 0 ? parseInt(options.alarm, 10) : 0
       const block = parseFloat(options.block) > 0 ? parseFloat(options.block) : 0
       const cap = parseFloat(options.cap) > 0 ? parseFloat(options.cap) : 0
@@ -316,7 +316,7 @@ program
       const webSocket = await createWebSocket()
       const screen = blessed.screen({ forceUnicode: true, fullUnicode: true, smartCSR: true })
       updateStore({ alarm, block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, market, screen, speed: { buy: 0, sell: 0, tick: 0 }, symbol, timers: {}, trades: [], webSocket })
-      start(`${name.charAt(0).toUpperCase()}${name.slice(1)} v${version}`)
+      start(`${name.charAt(0).toUpperCase()}${name.slice(1)} ${`${alarm > 0 ? `-a ${alarm} ` : ''} ${block > 0 ? `-b ${block} ` : ''}${cap > 0 ? `-c ${cap} ` : ''}${filter > 0 ? `-f ${filter} ` : ''}${market.length > 0 ? `-m ${market}` : ''}`.trimEnd()}`)
     } catch (error) {
       console.log(`${chalk.red(figures.cross)} ${error.toString()}`)
       process.exit()
