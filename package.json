@@ -13,6 +13,8 @@
     "nuke": "npm run clean && npm cache verify && npm install",
     "sort": "npx sort-package-json",
     "start": "node highway.js BTCUSDT -b 1",
+    "start:buy": "node highway.js BTCUSDT -b 1 -m buy",
+    "start:sell": "node highway.js BTCUSDT -b 1 -m sell",
     "start:smart": "node highway.js BTCUSDT -b 10 -f 1"
   },
   "dependencies": {
