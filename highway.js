@@ -316,7 +316,7 @@ program
       const webSocket = await createWebSocket()
       const screen = blessed.screen({ forceUnicode: true, fullUnicode: true, smartCSR: true })
       updateStore({ alarm, block, boxes: {}, cap, currency: new Intl.NumberFormat('en-US', { currency: 'USD', minimumFractionDigits: 2, style: 'currency' }), deltas: [], filter, market, screen, speed: { buy: 0, sell: 0, tick: 0 }, symbol, timers: {}, trades: [], webSocket })
-      start(`${name.charAt(0).toUpperCase()}${name.slice(1)} ${`${alarm > 0 ? `-a ${alarm} ` : ''} ${block > 0 ? `-b ${block} ` : ''}${cap > 0 ? `-c ${cap} ` : ''}${filter > 0 ? `-f ${filter} ` : ''}${market.length > 0 ? `-m ${market}` : ''}`.trimEnd()}`)
+      start(`${name.charAt(0).toUpperCase()}${name.slice(1)} ${symbol} ${`${alarm > 0 ? `-a ${alarm} ` : ''} ${block > 0 ? `-b ${block} ` : ''}${cap > 0 ? `-c ${cap} ` : ''}${filter > 0 ? `-f ${filter} ` : ''}${market.length > 0 ? `-m ${market}` : ''}`.trimEnd()}`)
     } catch (error) {
       console.log(`${chalk.red(figures.cross)} ${error.toString()}`)
       process.exit()

@@ -6,7 +6,7 @@ Trading tape.
 
 ### Requires
 
-- [Node v18.18.1](https://nodejs.org/)
+- [Node v18.18.2](https://nodejs.org/)
 - npm v10.2.0
 
 ### Installation
@@ -33,6 +33,8 @@ npm run start:smart # BTCUSDT -b 10 -f 1
 ##### `-a <ticks>` / `--alarm <ticks>`
 
 Trigger alarm on ticks (default 0).
+
+> Windows requires [VLC](https://www.videolan.org/) installed.
 
 ```sh
 node highway.js <SYMBOL> -a <ticks> # e.g. 'node highway.js BTCUSDT -a 1000'
